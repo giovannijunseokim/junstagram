@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SignInActivity">
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:src="@drawable/logo_title"
+        android:layout_marginTop="30dp"
+        android:id="@+id/logo"/>
+
+    <TextView
+        android:id="@+id/desText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="친구들의 사진과 동영상을 보려면 \n가입하세요."
+        android:textSize="25dp"
+        android:textStyle="bold" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/desText"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/facebooklogin"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/facebook_logo"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="bottom"/>
+        <TextView
+            android:id="@+id/fbLoginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Facebook으로 로그인"
+            android:textColor="@color/blue"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/or"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/facebooklogin">
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 또는 "/>
+        <View
+            android:layout_width="170dp"
+            android:layout_height="1dp"
+            android:background="@color/black" />
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/edit1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/or"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="20dp"
+        android:hint="이메일 주소" />
+
+    <EditText
+        android:id="@+id/edit2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="성명"
+        android:privateImeOptions="defaultnputMode=korean"
+        android:inputType="textPersonName"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit2"
+        android:id="@+id/edit3"
+        android:hint="사용자 이름"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit3"
+        android:id="@+id/edit4"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"/>
+
+    <Button
+        android:id="@+id/signInBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit4"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="20dp"
+        android:backgroundTint="@color/blue"
+        android:text="가입" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/agreeText"
+        android:layout_below="@+id/signInBtn"
+        android:layout_centerHorizontal="true"
+        android:textSize="18dp"
+        android:gravity="center"
+        android:text="가입하면 Junstagram의 이용 약관, 데이터\n 정책 및 쿠키 정책에 동의하게 됩니다."/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/agreeText"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="계정이 있으신가요?"/>
+        <TextView
+            android:id="@+id/loginText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="로그인"
+            android:textColor="@color/blue" />
+    </LinearLayout>
+
+</RelativeLayout>
