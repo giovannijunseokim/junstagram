@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".navigation.AddPhotoActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/myToolbar"
@@ -14,7 +14,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">$
+            android:layout_height="match_parent">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -29,27 +29,38 @@
         android:background="@color/colorDivision"
         android:layout_below="@id/myToolbar"/>
 
-    <FrameLayout
-        android:id="@+id/mainContent"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/navDivision"
-        android:layout_below="@id/toolbarDivision" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:id="@+id/navDivision"
-        android:orientation="horizontal"
-        android:background="@color/colorDivision"
-        android:layout_above="@id/bottomNavigation"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigation"
+    <ImageView
+        android:id="@+id/addPhotoImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/toolbarDivision"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp" />
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        app:menu="@menu/bottom_navigation_main" />
+        android:id="@+id/editText"
+        android:layout_below="@id/toolbarDivision"
+        android:layout_toRightOf="@id/addPhotoImage" >
+
+        <EditText
+            android:id="@+id/addPhotoEditExplain"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:gravity="top"
+            android:hint="문구 입력 ..." />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/addPhotoUploadBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/editText"
+        android:layout_toRightOf="@id/addPhotoImage"
+        android:text="사진 업로드"
+        android:textStyle="bold"/>
 
 
 

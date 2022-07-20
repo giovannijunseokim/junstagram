@@ -40,10 +40,10 @@ class LoginActivity : AppCompatActivity() {
             val password:String = binding.pwEdittext.text.toString()
             MyApplication.auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this){ task ->
-                    binding.idEdittext.text.clear()
-                    binding.pwEdittext.text.clear()
                     if(task.isSuccessful){
                         if (MyApplication.checkAuth()){
+                            binding.idEdittext.text.clear()
+                            binding.pwEdittext.text.clear()
                             MyApplication.email = email
                             val intent = Intent(this,MainActivity::class.java)
                             startActivity(intent)
@@ -54,6 +54,7 @@ class LoginActivity : AppCompatActivity() {
                             Toast.LENGTH_SHORT).show()
                         }
                     }else{
+                        binding.pwEdittext.text.clear()
                         Toast.makeText(baseContext,"로그인 실패",
                             Toast.LENGTH_SHORT).show()
                     }
