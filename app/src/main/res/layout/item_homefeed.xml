@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:id="@+id/homeFeed_profileImage"
+            android:src="@mipmap/ic_launcher"
+            android:layout_margin="7.5dp"/>
+        <TextView
+            android:id="@+id/homeFeed_profileText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:text="유저 이름"
+            android:textStyle="bold"
+            android:singleLine="true"/>
+    </LinearLayout>
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/homeFeed_Image"
+        android:scaleType="centerCrop"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="7.5dp">
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_favorite_border"
+            android:id="@+id/homeFeed_favoriteIcon"/>
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/ic_chat_black"
+            android:id="@+id/homeFeed_commentIcon"/>
+    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="좋아요 0"
+        android:id="@+id/homeFeed_favoriteCounterText"
+        android:layout_marginLeft="7.5dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="7.5dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="유저 이름"
+            android:id="@+id/homeFeed_userName"
+            android:layout_marginRight="10dp"
+            android:textStyle="bold"
+            android:singleLine="true"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="설명"
+            android:id="@+id/homeFeed_explainText"
+            android:layout_marginRight="20dp"/>
+    </LinearLayout>
+</LinearLayout>

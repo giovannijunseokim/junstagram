@@ -1,18 +1,24 @@
 package com.example.junstagram
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.AdapterView
+import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.PackageManagerCompat
 import com.example.junstagram.databinding.ActivityMainBinding
-import com.example.junstagram.navigation.AlarmFragment
-import com.example.junstagram.navigation.DetailViewFragment
-import com.example.junstagram.navigation.GridFragment
-import com.example.junstagram.navigation.UserFragment
+import com.example.junstagram.navigation.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
          when(item.itemId){
              R.id.actionHome -> {
@@ -31,6 +37,15 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                  return true
              }
              R.id.actionAddPhoto -> {
+                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                     PackageManager.PERMISSION_GRANTED){
+                     startActivity(Intent(this, AddPhotoActivity::class.java))
+                 }
+                 else{
+                     Toast.makeText(baseContext,
+                         "갤러리 사용 권한을 허가해 주세요.",
+                         Toast.LENGTH_SHORT).show()
+                 }
                  return true
              }
              R.id.actionFavoriteAlarm -> {
@@ -47,6 +62,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.bottomNavigation.setOnNavigationItemSelectedListener(this)
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), 1)
 
+        binding.bottomNavigation.selectedItemId = R.id.actionHome
     }
 }
