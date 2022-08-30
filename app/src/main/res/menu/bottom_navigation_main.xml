@@ -15,15 +15,15 @@
         android:id="@+id/actionAddPhoto"
         android:enabled="true"
         android:icon="@drawable/ic_add_a_photo"
-        android:title="@string/gallery"/>
+        android:title="@string/upload_image"/>
     <item
         android:id="@+id/actionFavoriteAlarm"
         android:enabled="true"
         android:icon="@drawable/ic_favorite"
-        android:title="@string/alarm_favorite"/>
+        android:title="@string/favorite"/>
     <item
         android:id="@+id/actionAccount"
         android:enabled="true"
         android:icon="@drawable/ic_account"
-        android:title="@string/home"/>
+        android:title="@string/account"/>
 </menu>

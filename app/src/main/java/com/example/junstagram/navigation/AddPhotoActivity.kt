@@ -47,7 +47,27 @@ class AddPhotoActivity : AppCompatActivity() {
         }.launch("image/*")
 
         binding.addPhotoUploadBtn.setOnClickListener{
-            photoUri?.let { it -> uploadImageWithTextToFirebase(it) }
+            var fileName = "IMAGE_" + timeStamp + "_.png"
+
+            var storageRef = storage!!.reference.child("images")?.child(fileName)
+            storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
+                storageRef.downloadUrl.addOnSuccessListener{ uri ->
+                    var contentDataModel = ContentDataModel()
+                    contentDataModel.imageUri = uri.toString()
+                    contentDataModel.uid = auth?.currentUser?.uid
+                    contentDataModel.userId = auth?.currentUser?.email
+                    contentDataModel.explain = binding.addPhotoEditExplain.text.toString()
+                    contentDataModel.timeStamp = System.currentTimeMillis()
+
+                    db?.collection("images")?.document()?.set(contentDataModel)
+
+                    setResult(Activity.RESULT_OK)
+                    Toast.makeText(this, "사진이 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+
+            //photoUri?.let { it -> uploadImageWithTextToFirebase(it) }
         }
 
     }
@@ -56,7 +76,6 @@ class AddPhotoActivity : AppCompatActivity() {
         val binding = ActivityAddPhotoBinding.inflate(layoutInflater)
 
         var storageRef = storage!!.reference.child("images")?.child(fileName)
-
         storageRef?.putFile(uri!!)?.addOnSuccessListener {
             storageRef.downloadUrl.addOnSuccessListener{ uri ->
                 var contentDataModel = ContentDataModel()
@@ -67,9 +86,9 @@ class AddPhotoActivity : AppCompatActivity() {
                 contentDataModel.timeStamp = System.currentTimeMillis()
 
                 db?.collection("images")?.document()?.set(contentDataModel)
-                Toast.makeText(this, "사진이 업로드 되었습니다.", Toast.LENGTH_SHORT)
 
                 setResult(Activity.RESULT_OK)
+                Toast.makeText(this, "사진이 업로드 되었습니다.", Toast.LENGTH_SHORT).show()
                 finish()
                 }
         }

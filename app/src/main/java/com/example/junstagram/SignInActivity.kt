@@ -17,7 +17,6 @@ class SignInActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivitySignInBinding.inflate(layoutInflater)
-        auth = Firebase.auth
         binding.loginText.setOnClickListener{ // 로그인 클릭 시 실행
             finish()
         }

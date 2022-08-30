@@ -39,10 +39,10 @@
 
         <EditText
             android:id="@+id/addPhotoEditExplain"
-            android:layout_height="100dp"
             android:layout_width="match_parent"
+            android:layout_height="100dp"
             android:gravity="top"
-            android:hint="문구 입력 ..." />
+            android:hint="edit..." />
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button

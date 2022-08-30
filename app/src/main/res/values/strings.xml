@@ -25,12 +25,12 @@
     <string name="account">Account</string>
 
     <!-- Account -->
-    <string name="post">Post</string>
-    <string name="following">Following</string>
-    <string name="follower">Follower</string>
-    <string name="follow">Follow</string>
-    <string name="follow_cancel">Follow cancel</string>
-    <string name="profile">Profile</string>
+    <string name="post">게시글</string>
+    <string name="following">팔로잉</string>
+    <string name="follower">팔로워</string>
+    <string name="follow">팔로우</string>
+    <string name="follow_cancel">팔로우 취소</string>
+    <string name="profile">프로필</string>
     <string name="count_0">0</string>
 
     <!-- Alarm -->

@@ -1,102 +1,125 @@
 package com.example.junstagram
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import com.example.junstagram.MyApplication.Companion.auth
 import com.example.junstagram.databinding.ActivityLoginBinding
 import com.facebook.*
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
-import com.google.firebase.auth.FacebookAuthProvider
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
 
 
 class LoginActivity : AppCompatActivity() {
-    lateinit var auth :FirebaseAuth
-    val GOOGLE_REQUEST_CODE = 99
-    val TAG = "googleLogin"
+
+    lateinit var binding: ActivityLoginBinding
+    var googleSignInClient : GoogleSignInClient? = null
     lateinit var callbackManager: CallbackManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FacebookSdk.sdkInitialize(getApplicationContext())
-        AppEventsLogger.activateApp(this)
-        val binding = ActivityLoginBinding.inflate(layoutInflater)
-        auth = Firebase.auth
-        callbackManager = CallbackManager.Factory.create()
-        setContentView(binding.root)
+        binding = ActivityLoginBinding.inflate(layoutInflater)
 
-        binding.signText.setOnClickListener{ // 가입하기 클릭 시 실행
+        //일반 로그인
+        callbackManager = CallbackManager.Factory.create()
+
+        binding.signText.setOnClickListener { // 가입하기 클릭 시 실행
             val intent: Intent = Intent(this, SignInActivity::class.java)
             startActivity(intent)
         }
 
-        binding.loginBtn.setOnClickListener{
-            val email:String = binding.idEdittext.text.toString()
-            val password:String = binding.pwEdittext.text.toString()
-            MyApplication.auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this){ task ->
-                    if(task.isSuccessful){
-                        if (MyApplication.checkAuth()){
+        binding.loginBtn.setOnClickListener {
+            login()
+        }
+
+        val getResultForGoogleSignIn = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(it.data)
+            try {
+                Log.d("gio", "ok.......")
+                val account = task.getResult(ApiException::class.java)!!
+                val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+                auth.signInWithCredential(credential)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            MyApplication.email = account.email
+                            moveMainPage(auth.currentUser)
+                        } else {
+                            Toast.makeText(
+                                baseContext, "로그인 실패1",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }
+            }catch (e:ApiException){
+                Toast.makeText(
+                    baseContext, "로그인 실패2",
+                    Toast.LENGTH_SHORT
+                ).show()
+                Log.d("gio", e.toString())
+            }
+        }
+
+        binding.googleLoginText.setOnClickListener {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("326545122611-ipdg53jpceqqqgtrfdtr1ph6e9e107f3.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+            googleSignInClient = GoogleSignIn.getClient(this, gso)
+            val signInIntent = googleSignInClient?.signInIntent
+            getResultForGoogleSignIn.launch(signInIntent)
+        }
+
+        setContentView(binding.root)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        moveMainPage(auth.currentUser)
+    }
+
+    fun login(){
+        val email: String = binding.idEdittext.text.toString()
+        val password: String = binding.pwEdittext.text.toString()
+        if (email != "" && password != "") {
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        if (MyApplication.checkAuth()) {
                             binding.idEdittext.text.clear()
                             binding.pwEdittext.text.clear()
                             MyApplication.email = email
-                            val intent = Intent(this,MainActivity::class.java)
-                            startActivity(intent)
-                            finish()
+                            moveMainPage(auth.currentUser)
                         } else {
-                            Toast.makeText(baseContext,
-                            "전송된 메일로 이메일 인증이 되지 않았습니다.",
-                            Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                baseContext,
+                                "전송된 메일로 이메일 인증이 되지 않았습니다.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                    }else{
+                    } else {
                         binding.pwEdittext.text.clear()
-                        Toast.makeText(baseContext,"로그인 실패",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            baseContext, "로그인 실패",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
+        } else {
+            Toast.makeText(baseContext, "아이디와 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show()
         }
+    }
 
-        binding.fbLoginText.setOnClickListener{
-            facebookLogin()
+    fun moveMainPage(user: FirebaseUser?){
+        if(user != null){
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
-    }
-    private fun facebookLogin(){
-        LoginManager.getInstance()
-            .logInWithReadPermissions(this, listOf("public_profile","email"))
-        LoginManager.getInstance()
-            .registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-                override fun onSuccess(result: LoginResult?) {
-                    handleFBToken(result?.accessToken)
-                }
-                override fun onCancel() {}
-                override fun onError(error: FacebookException?) {}
-            })
-    }
-    private fun handleFBToken(token : AccessToken?){
-        var credential = FacebookAuthProvider.getCredential(token?.token!!)
-        auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    Log.d(TAG, "로그인 성공")
-                    val user = auth!!.currentUser
-                    loginSuccess()
-                } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                }
-            }
-    }
-    private fun loginSuccess(){
-        val intent = Intent(this,MainActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        callbackManager?.onActivityResult(requestCode, resultCode, data)
     }
 }
