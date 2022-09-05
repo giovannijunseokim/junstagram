@@ -50,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
                         if (task.isSuccessful) {
                             MyApplication.email = account.email
                             moveMainPage(auth.currentUser)
+                            finish()
                         } else {
                             Toast.makeText(
                                 baseContext, "로그인 실패1",
@@ -117,9 +118,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun moveMainPage(user: FirebaseUser?){
-        if(user != null){
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
-        }
+        startActivity(Intent(this, MainActivity::class.java))
     }
 }

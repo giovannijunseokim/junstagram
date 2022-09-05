@@ -4,9 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="사용자 이름"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:id="@+id/user_nickname"/>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="1dp"
+        android:background="@color/colorDivision"
+        android:layout_marginTop="1dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
@@ -21,7 +33,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="100dp"
                 android:layout_toRightOf="@+id/user_profile"
                 android:gravity="center">
 
@@ -83,13 +95,20 @@
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="이름"
+            android:textStyle="bold" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="이름"
+            android:text=""
             android:layout_marginLeft="10dp"
-            android:textStyle="bold"
-            android:id="@+id/user_name"/>
+            android:id="@+id/user_description"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"

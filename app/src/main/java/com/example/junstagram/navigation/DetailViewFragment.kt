@@ -1,5 +1,6 @@
 package com.example.junstagram.navigation
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +10,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.junstagram.MyApplication
+import com.example.junstagram.MyApplication.Companion.email
 import com.example.junstagram.R
 import com.example.junstagram.databinding.FragmentDetailBinding
 import com.example.junstagram.databinding.ItemHomefeedBinding
 import com.example.junstagram.navigation.model.ContentDataModel
+import com.example.junstagram.navigation.model.UserDataModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.auth.User
+import kotlinx.android.synthetic.main.item_homefeed.*
 
 class DetailViewFragment : Fragment(){
 
@@ -23,34 +28,36 @@ class DetailViewFragment : Fragment(){
         var view = LayoutInflater.from(activity).inflate(R.layout.fragment_detail,
         container,false)
 
-        val binding = FragmentDetailBinding.inflate(layoutInflater)
+        val fragmentDetailBinding = FragmentDetailBinding.inflate(layoutInflater)
         val manager = LinearLayoutManager(activity)
         manager.reverseLayout = true
         manager.stackFromEnd = true
 
-        binding.detailViewFragmentRecyclerView.adapter = DetailViewAdapter()
-        binding.detailViewFragmentRecyclerView.layoutManager = manager
+        fragmentDetailBinding.detailViewFragmentRecyclerView.adapter = DetailViewAdapter()
+        fragmentDetailBinding.detailViewFragmentRecyclerView.layoutManager = manager
 
-        return binding.root
-
+        return fragmentDetailBinding.root
     }
+    @SuppressLint("NotifyDataSetChanged")
     inner class DetailViewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         var contentDataModels : ArrayList<ContentDataModel> = arrayListOf()
         var contentUidList : ArrayList<String> = arrayListOf()
+        var userDataModel = UserDataModel()
         var uid : String? = null
+        var email : String? = null
 
         init {
-            MyApplication.db?.collection("images")?.orderBy("timeStamp")?.addSnapshotListener { snapshot, error ->
+            MyApplication.db.collection("images").orderBy("timeStamp").addSnapshotListener { snapshot, error ->
                 contentDataModels.clear()
                 contentUidList.clear()
+
                 if (snapshot == null) return@addSnapshotListener
-                for(snapshot in snapshot!!.documents){
+                for(snapshot in snapshot.documents){
                     var item = snapshot.toObject(ContentDataModel::class.java)
                     contentDataModels.add(item!!)
                     contentUidList.add(snapshot.id)
-
+                    notifyDataSetChanged()
                 }
-                notifyDataSetChanged()
             }
         }
 
@@ -67,9 +74,22 @@ class DetailViewFragment : Fragment(){
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val holder = holder as MyViewHolder
             val data = contentDataModels.get(position)
+
             holder.binding.run {
-                homeFeedProfileText.text = data.userId
-                homeFeedUserName.text = data.userId
+
+                MyApplication.db.collection("userInformation").whereEqualTo("uid",uid)?.addSnapshotListener{
+                        snapshot, error ->
+                    if (snapshot == null){
+                        return@addSnapshotListener
+                    }
+                    for (data in snapshot!!.documents) {
+                        userDataModel = (data.toObject(UserDataModel::class.java)!!)
+                        homeFeed_userName.text = userDataModel.nickname
+                        homeFeed_profileText.text = userDataModel.nickname
+                    }
+
+                }
+
                 Glide.with(holder.itemView.context).load(data.imageUri).into(holder.binding.homeFeedImage)
                 homeFeedExplainText.text = data.explain
                 homeFeedFavoriteCounterText.text = "좋아요 " + data.favoriteCount + "개"
@@ -118,7 +138,6 @@ class DetailViewFragment : Fragment(){
             var fragment = UserFragment()
             var bundle = Bundle()
             bundle.putString("destinationUid", contentDataModels[position].uid)
-            bundle.putString("userId", contentDataModels[position].userId)
             fragment.arguments = (bundle)
             activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.mainContent, fragment)?.commit()
         }
