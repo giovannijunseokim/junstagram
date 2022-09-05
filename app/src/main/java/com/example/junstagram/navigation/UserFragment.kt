@@ -46,7 +46,6 @@ class UserFragment : Fragment(){
             LayoutInflater.from(activity).inflate(R.layout.fragment_user, container, false)
         uid = arguments?.getString("destinationUid")!! // 현재 내가 보고있는 계정
         currentUserUid = MyApplication.auth.currentUser?.uid!! // 로그인 한 계정
-        email = MyApplication.auth.currentUser?.email.toString()
         if (uid == currentUserUid) {
             //내 페이지
             fragmentView.user_followBtnSignOut?.text = "로그아웃"
