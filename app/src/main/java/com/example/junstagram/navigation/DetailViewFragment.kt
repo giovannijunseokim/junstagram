@@ -1,6 +1,7 @@
 package com.example.junstagram.navigation
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,15 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.junstagram.CommentActivity
 import com.example.junstagram.MyApplication
-import com.example.junstagram.MyApplication.Companion.email
 import com.example.junstagram.R
 import com.example.junstagram.databinding.FragmentDetailBinding
 import com.example.junstagram.databinding.ItemHomefeedBinding
 import com.example.junstagram.navigation.model.ContentDataModel
 import com.example.junstagram.navigation.model.UserDataModel
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.auth.User
 import kotlinx.android.synthetic.main.item_homefeed.*
 
 class DetailViewFragment : Fragment(){
@@ -77,6 +77,12 @@ class DetailViewFragment : Fragment(){
 
             holder.binding.run {
 
+                Glide.with(holder.itemView.context).load(data.imageUri).into(holder.binding.homeFeedImage)
+                homeFeedExplainText.text = data.explain
+                homeFeedFavoriteCounterText.text = "좋아요 " + data.favoriteCount + "개"
+                //Glide.with(holder.itemView.context).load(data.imageUri).into(holder.binding.homeFeedProfileImage)
+                homeFeedFavoriteIcon.setOnClickListener { favoriteEvent(position) }
+                // 유저 이름 가져오기
                 MyApplication.db.collection("userInformation").whereEqualTo("uid",uid)?.addSnapshotListener{
                         snapshot, error ->
                     if (snapshot == null){
@@ -87,14 +93,8 @@ class DetailViewFragment : Fragment(){
                         homeFeed_userName.text = userDataModel.nickname
                         homeFeed_profileText.text = userDataModel.nickname
                     }
-
                 }
 
-                Glide.with(holder.itemView.context).load(data.imageUri).into(holder.binding.homeFeedImage)
-                homeFeedExplainText.text = data.explain
-                homeFeedFavoriteCounterText.text = "좋아요 " + data.favoriteCount + "개"
-                //Glide.with(holder.itemView.context).load(data.imageUri).into(holder.binding.homeFeedProfileImage)
-                homeFeedFavoriteIcon.setOnClickListener { favoriteEvent(position) }
                 if(contentDataModels!![position].favorites.containsKey(uid)){
                     // 버튼 클릭 돼있음
                     homeFeedFavoriteIcon.setImageResource(R.drawable.ic_favorite)
@@ -112,8 +112,14 @@ class DetailViewFragment : Fragment(){
                 holder.binding.homeFeedUserName.setOnClickListener {
                     changeViewToUserFragment(position)
                 }
+                holder.binding.homeFeedCommentIcon.setOnClickListener {
+                    val intent = Intent(it.context, CommentActivity::class.java)
+                    intent.putExtra("contentUid", contentUidList[position])
+                    startActivity(intent)
+                }
 
             }
+
         }
 
         fun favoriteEvent(position : Int){
